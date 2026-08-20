@@ -1,0 +1,76 @@
+/* Modern High-Performance Visual & Hero Animation Pipelines */
+
+@keyframes tickerSlide {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+}
+
+.ticker-text-flow {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    animation: tickerSlide 25s linear infinite;
+    will-change: transform;
+}
+
+/* Glassmorphic Animated Hero Entry */
+@keyframes fadeInUpHero {
+    0% { 
+        opacity: 0; 
+        transform: translateY(30px) scale(0.95); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+.animated-hero-card {
+    animation: fadeInUpHero 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Floating Emblem Animation */
+@keyframes floatCrest {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+
+.floating-crest {
+    animation: floatCrest 4s ease-in-out infinite;
+}
+
+/* Glowing Pulse Keyframe for Cyan Accents */
+@keyframes cyanGlowBorder {
+    0% { border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+    50% { border-color: rgba(56, 189, 248, 0.8); box-shadow: 0 0 35px rgba(56, 189, 248, 0.4); }
+    100% { border-color: rgba(56, 189, 248, 0.3); box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); }
+}
+
+.welcome-panel {
+    animation: fadeInUpHero 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards, cyanGlowBorder 6s ease-in-out infinite;
+}
+
+.glow-text {
+    text-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
+}
+
+.pulse-hover {
+    transition: all 0.3s ease;
+}
+
+.pulse-hover:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5) !important;
+}
+
+/* Floating AI Chat Window Animations */
+@keyframes popInWidget {
+    0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.floating-chat-window.visible {
+    display: flex !important;
+    animation: popInWidget 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
