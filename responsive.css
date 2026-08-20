@@ -1,0 +1,109 @@
+/* Uncompromised Mobile Scaling Matrix Overrides */
+@media (max-width: 1023px) {
+    html, body {
+        width: 100%;
+        overflow-x: hidden;
+        font-size: 14px;
+    }
+    
+    .app-container {
+        padding: 10px 8px;
+    }
+    
+    .system-top-banner {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+        justify-content: center;
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    
+    .top-banner-meta-left {
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .top-banner-action-right {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .top-banner-action-right .btn-pill-admin {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .main-dashboard-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .sub-pages-routing-station {
+        order: 1;
+        width: 100%;
+    }
+    
+    .donation-sidebar-card {
+        order: 2;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .navigation-tabs-container {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 4px 4px 12px 4px;
+        border-bottom: 1px solid var(--card-border);
+        margin-bottom: 16px;
+        scrollbar-width: thin;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .navigation-tabs-container::-webkit-scrollbar {
+        height: 3px;
+    }
+
+    .nav-tab-btn {
+        padding: 10px 14px;
+        font-size: 0.85rem;
+    }
+
+    .admin-grid-inputs {
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+
+    .analytics-summary {
+        grid-template-columns: 1fr !important;
+        gap: 12px;
+    }
+    
+    .metric-value {
+        font-size: 1.7rem !important;
+    }
+
+    .gradient-hero-title { font-size: 1.75rem !important; }
+    .bismillah-calligraphy { font-size: 1.8rem !important; }
+    .salaam-arabic { font-size: 1.25rem !important; }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--card-border);
+        border-radius: 8px;
+    }
+    
+    th, td {
+        padding: 10px 12px;
+    }
+}
+
+@media (min-width: 580px) and (max-width: 1023px) {
+    .analytics-summary {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
