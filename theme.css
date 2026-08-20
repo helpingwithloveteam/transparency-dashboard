@@ -1,0 +1,40 @@
+/* Dynamic Imperial Cobalt Theme Overrides */
+.copyable-field span {
+    font-family: monospace;
+    color: var(--cyan-light);
+    font-weight: bold;
+}
+
+.hadith-gradient-card {
+    background: linear-gradient(135deg, rgba(8, 26, 48, 0.95) 0%, rgba(13, 43, 74, 0.95) 100%);
+    border-color: var(--cyan-primary);
+}
+
+.border-left-gold {
+    border-left: 4px solid var(--amber-gold);
+}
+
+.gold-text {
+    color: var(--amber-gold);
+}
+
+.update-banner-node {
+    background: rgba(56, 189, 248, 0.05);
+    padding: 16px;
+    border-radius: 8px;
+    border-left: 3px solid var(--cyan-primary);
+    margin-bottom: 16px;
+}
+
+.update-banner-title {
+    margin: 0;
+    color: #ffffff;
+}
+
+.contact-details-box {
+    background: rgba(0, 0, 0, 0.25);
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+}
