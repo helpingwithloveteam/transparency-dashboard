@@ -1,14 +1,9 @@
 // ==========================================================================
 // AUTOMATIC CLOUD REALTIME SYNC CONFIGURATION (JSONBIN.IO)
 // ==========================================================================
-const JSONBIN_BIN_ID = "6a71ccdaf5f4af5e29e9719a";      // e.g. "65a1234567890abcdef"
-const JSONBIN_API_KEY = "$2a$10$3DoQDWPQyuqg9En5fBJDL.lYNc0sjtCJdPtFDqBH7KYRJHsk3PKha";  // e.g. "$2b$10$abc..."
+const JSONBIN_BIN_ID = "6a71ccdaf5f4af5e29e9719a";
+const JSONBIN_API_KEY = "$2a$10$3DoQDWPQyuqg9En5fBJDL.lYNc0sjtCJdPtFDqBH7KYRJHsk3PKha";
 const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`;
-
-/**
- * Unlocked NGO Core Command Application Script Module
- * Executive Admin & Indian Islamic Calendar Sync Core
- */
 
 function getDynamicCurrentMonthTag() {
     const now = new Date();
@@ -18,10 +13,13 @@ function getDynamicCurrentMonthTag() {
     return `${monthAbbr}-${yearTwoDigits}`;
 }
 
+// Fixed Running Month Reference
+const CURRENT_RUNNING_MONTH = getDynamicCurrentMonthTag();
+
 let currentSystemBudgetThreshold = 13000;
 let globalActiveSearchQuery = "";
-let selectedActiveMonth = getDynamicCurrentMonthTag();
-let adminActiveLogsMonth = getDynamicCurrentMonthTag();
+let selectedActiveMonth = CURRENT_RUNNING_MONTH;
+let adminActiveLogsMonth = CURRENT_RUNNING_MONTH;
 let isAdminAuthenticated = false;
 
 let customAdminPasswordToken = "Asdf*963.*963.";
@@ -29,7 +27,7 @@ let customAdminPasswordToken = "Asdf*963.*963.";
 let mealCounterConfig = {
     enabled: false,
     donorId: "DNR0001",
-    month: getDynamicCurrentMonthTag()
+    month: CURRENT_RUNNING_MONTH
 };
 
 let emergencyAlertConfig = {
@@ -62,7 +60,11 @@ let internalMessageInboxLedger = [
 
 let savedLetterheadArchive = [];
 
-let systemMonthSequence = ["May-25", "Jun-25", "Jul-25", "Aug-25", "Sep-25", "Oct-25", "Nov-25", "Dec-25", "Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26"];
+let systemMonthSequence = [
+    "May-25", "Jun-25", "Jul-25", "Aug-25", "Sep-25", "Oct-25", "Nov-25", "Dec-25",
+    "Jan-26", "Feb-26", "Mar-26", "Apr-26", "May-26", "Jun-26", "Jul-26", "Aug-26", "Sep-26", "Oct-26", "Nov-26", "Dec-26"
+];
+
 const adminFutureMonths = [];
 const monthLabelsArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -108,19 +110,49 @@ let dynamicHadithPool = [
 let activeHadithIndex = 0;
 let hadithAutoRotateTimer = null;
 
-// 🌙 INDIAN ISLAMIC HOLIDAYS (CALCULATED FOR IST STANDARDS)
+// 🌙 INDIAN ISLAMIC HOLIDAYS FOR UPCOMING YEAR 2027 (1448–1449 AH)
 const indianIslamicHolidays = [
-    { name: "Isra & Mi'raj", hijri: "27 Rajab 1447 AH", greg: "Jan 16, 2026" },
-    { name: "Shab-e-Barat (Lailat al-Bara'at)", hijri: "15 Sha'ban 1447 AH", greg: "Feb 03, 2026" },
-    { name: "Ramadan Fasting Begins", hijri: "1 Ramadan 1447 AH", greg: "Feb 18, 2026" },
-    { name: "Laylat al-Qadr (Night of Power)", hijri: "27 Ramadan 1447 AH", greg: "Mar 16, 2026" },
-    { name: "Eid-ul-Fitr (Ramadan Eid)", hijri: "1 Shawwal 1447 AH", greg: "Mar 20, 2026" },
-    { name: "Day of Arafah (Hajj)", hijri: "9 Dhul-Hijjah 1447 AH", greg: "May 26, 2026" },
-    { name: "Eid-ul-Adha (Bakrid)", hijri: "10 Dhul-Hijjah 1447 AH", greg: "May 27, 2026" },
-    { name: "Islamic New Year (1448 AH)", hijri: "1 Muharram 1448 AH", greg: "Jun 16, 2026" },
-    { name: "Day of Ashura", hijri: "10 Muharram 1448 AH", greg: "Jun 26, 2026" },
-    { name: "Milad-un-Nabi (Prophet's Birthday)", hijri: "12 Rabi' al-Awwal 1448 AH", greg: "Aug 25, 2026" }
+    { name: "Isra & Mi'raj", hijri: "27 Rajab 1448 AH", greg: "Jan 06, 2027" },
+    { name: "Shab-e-Barat (Lailat al-Bara'at)", hijri: "15 Sha'ban 1448 AH", greg: "Jan 23, 2027" },
+    { name: "Ramadan Fasting Begins", hijri: "1 Ramadan 1448 AH", greg: "Feb 08, 2027" },
+    { name: "Laylat al-Qadr (Night of Power)", hijri: "27 Ramadan 1448 AH", greg: "Mar 06, 2027" },
+    { name: "Eid-ul-Fitr (Ramadan Eid)", hijri: "1 Shawwal 1448 AH", greg: "Mar 10, 2027" },
+    { name: "Day of Arafah (Hajj)", hijri: "9 Dhul-Hijjah 1448 AH", greg: "May 16, 2027" },
+    { name: "Eid-ul-Adha (Bakrid)", hijri: "10 Dhul-Hijjah 1448 AH", greg: "May 17, 2027" },
+    { name: "Islamic New Year (1449 AH)", hijri: "1 Muharram 1449 AH", greg: "Jun 06, 2027" },
+    { name: "Day of Ashura", hijri: "10 Muharram 1449 AH", greg: "Jun 15, 2027" },
+    { name: "Milad-un-Nabi (Prophet's Birthday)", hijri: "12 Rabi' al-Awwal 1449 AH", greg: "Aug 15, 2027" }
 ];
+
+// 🎵 WEB AUDIO SYNTHESIZER FOR EXECUTIVE WELCOME TONE
+function playDashboardWelcomeTone() {
+    try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const ctx = new AudioContext();
+
+        const notes = [523.25, 659.25, 783.99, 1046.50];
+        notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + (idx * 0.12));
+
+            gain.gain.setValueAtTime(0, ctx.currentTime + (idx * 0.12));
+            gain.gain.linearRampToValueAtTime(0.15, ctx.currentTime + (idx * 0.12) + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + (idx * 0.12) + 1.2);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.start(ctx.currentTime + (idx * 0.12));
+            osc.stop(ctx.currentTime + (idx * 0.12) + 1.3);
+        });
+    } catch(e) {
+        console.log("Welcome tone audio triggered.");
+    }
+}
 
 function getCurrentISTTimestamp() {
     const options = { timeZone: 'Asia/Kolkata', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false };
@@ -159,8 +191,55 @@ window.addEventListener('DOMContentLoaded', async () => {
     syncBankingUIRenderElements();
     setupInactivityListeners();
 
+    updateCurrentMonthGoalProgressBar();
     switchSystemMonth(selectedActiveMonth);
 });
+
+function transitionToDashboard() {
+    playDashboardWelcomeTone();
+    document.getElementById('greetingPage').classList.remove('active');
+    document.getElementById('dashboardPage').classList.add('active');
+    switchSystemMonth(selectedActiveMonth);
+}
+
+// 💬 FLOATING AI-STYLE CHAT SUPPORT WIDGET FUNCTIONS
+function toggleFloatingChatWidget() {
+    const chatWidget = document.getElementById('floatingChatWidget');
+    if (chatWidget) {
+        chatWidget.classList.toggle('visible');
+    }
+}
+
+function dispatchFloatingPublicMessage() {
+    const senderInput = document.getElementById('floatingMsgSender');
+    const textInput = document.getElementById('floatingMsgText');
+    
+    const sender = (senderInput && senderInput.value.trim()) ? senderInput.value.trim() : "Anonymous Contributor";
+    const content = textInput ? textInput.value.trim() : "";
+    
+    if(!content) { alert("Please type your message before sending."); return; }
+
+    const dateStr = getCurrentISTTimestamp().split(' ')[0];
+
+    internalMessageInboxLedger.unshift({
+        id: internalMessageInboxLedger.length + 1,
+        type: "Message",
+        sender: sender,
+        content: content,
+        status: "Unread",
+        note: "",
+        date: dateStr
+    });
+
+    const waText = encodeURIComponent(`💬 *NEW DIRECT CHAT MESSAGE*\n\n*Sender:* ${sender}\n*Message:* ${content}\n*Date:* ${dateStr}\n\n_Giving with Love Community Desk_`);
+    window.open(`https://api.whatsapp.com/send?phone=918074913361&text=${waText}`, '_blank');
+
+    alert("🎉 Transmission complete! Your message has been sent directly to the Admin Inbox and WhatsApp.");
+    if(senderInput) senderInput.value = "";
+    if(textInput) textInput.value = "";
+    toggleFloatingChatWidget();
+    renderAdminMessageInboxTable();
+}
 
 function normalizeLedgerItem(item) {
     if(!item.mode) item.mode = "UPI";
@@ -170,7 +249,7 @@ function normalizeLedgerItem(item) {
     return item;
 }
 
-// 🌐 CLOUD DATA ENGINE — LOADS REALTIME LIVE DATA FROM JSONBIN FOR ALL GLOBAL BROWSERS
+// 🌐 CLOUD DATA ENGINE — LOADS REALTIME LIVE DATA FROM JSONBIN
 async function loadInitialJsonDataEngine() {
     try {
         const res = await fetch(`${JSONBIN_URL}/latest`, {
@@ -196,7 +275,7 @@ async function loadInitialJsonDataEngine() {
     }
 }
 
-// 💾 CLOUD DATA SAVER — AUTOMATICALLY SYNCED ACROSS ALL DEVICES GLOBALLY WHEN ADMIN UPDATES LEDGER
+// 💾 CLOUD DATA SAVER
 async function saveLedgerStateToStorage() {
     localStorage.setItem('dynamicMasterLedger', JSON.stringify(dynamicMasterLedger));
     updateExportTextAreaBox();
@@ -218,7 +297,7 @@ async function saveLedgerStateToStorage() {
     }
 }
 
-// 🌙 ISLAMIC HOLIDAYS DRAWER RENDER ENGINE
+// 🌙 ISLAMIC HOLIDAYS DRAWER RENDER ENGINE (FOR 2027)
 function renderIslamicHolidaysGrid() {
     const grid = document.getElementById('islamicHolidaysGrid');
     if(!grid) return;
@@ -273,6 +352,7 @@ function executeQuickImportData() {
             recalculateLifetimeDonationTotals();
             calculateMasterMetrics();
             renderDonorAttendanceLoyaltyMatrix();
+            updateCurrentMonthGoalProgressBar();
             switchSystemMonth(selectedActiveMonth);
             closeQuickImportModal();
             alert("🎉 Realtime data synchronized successfully across your devices!");
@@ -563,7 +643,7 @@ function updateAdminPasswordToken() {
 function generateJazakallahNoteCard() {
     const cardText = `جَزَاكُمُ ٱللَّٰهُ خَيْرًا\n\nOfficial Acknowledgment — Giving with Love\nThank you for your generous contribution supporting 50 orphan children.\n\nReceipt Ref: ${document.getElementById('rcptNo').innerText}\nAmount: ${document.getElementById('rcptAmount').innerText}\n\nMay Allah bless and multiply your wealth with continuous Barakah!`;
     navigator.clipboard.writeText(cardText);
-    alert("🖼️ JazakAllah Thank-You Note copied to clipboard!");
+    alert("🖼️️ JazakAllah Thank-You Note copied to clipboard!");
 }
 
 function toggleReceiptTaxDisclaimer() {
@@ -747,6 +827,7 @@ function check24HourSessionPersistence() {
             document.getElementById('adminWorkspace').classList.add('active');
             document.getElementById('adminControlBtn').innerText = "🔒 Secure Logout";
             renderAdminMessageInboxTable();
+            updateAdminSpecialDashboardFeatures();
             resetAdminInactivityTimer();
         } else {
             localStorage.removeItem('adminSessionExpiry');
@@ -908,12 +989,6 @@ function commitCustomHadithOverride() {
     alert("Active dashboard Hadith updated successfully.");
 }
 
-function transitionToDashboard() {
-    document.getElementById('greetingPage').classList.remove('active');
-    document.getElementById('dashboardPage').classList.add('active');
-    switchSystemMonth(selectedActiveMonth);
-}
-
 function navigateSubPage(targetTabId, element) {
     document.querySelectorAll('.app-sub-section').forEach(view => view.classList.remove('active'));
     document.querySelectorAll('.navigation-tabs-container .nav-tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -938,6 +1013,9 @@ function buildInterfaceControls() {
     const adminStatusSelect = document.getElementById('admStatusDonorSelect');
     const mealSponsorDonorSelect = document.getElementById('mealSponsorDonorSelect');
     const mealSponsorMonthSelect = document.getElementById('mealSponsorMonthSelect');
+    const adminDonorExportSelect = document.getElementById('admDonorExportSelect');
+    const adminQuickRcptDonorSelect = document.getElementById('admQuickRcptDonorSelect');
+    const adminQuickRcptMonthSelect = document.getElementById('admQuickRcptMonthSelect');
     
     if(primarySelect) primarySelect.innerHTML = ""; 
     if(adminSelect) adminSelect.innerHTML = ""; 
@@ -946,6 +1024,9 @@ function buildInterfaceControls() {
     if(adminStatusSelect) adminStatusSelect.innerHTML = "";
     if(mealSponsorDonorSelect) mealSponsorDonorSelect.innerHTML = "";
     if(mealSponsorMonthSelect) mealSponsorMonthSelect.innerHTML = "";
+    if(adminDonorExportSelect) adminDonorExportSelect.innerHTML = '<option value="ALL">-- ALL DONORS (MASTER DATABASE) --</option>';
+    if(adminQuickRcptDonorSelect) adminQuickRcptDonorSelect.innerHTML = "";
+    if(adminQuickRcptMonthSelect) adminQuickRcptMonthSelect.innerHTML = "";
 
     systemMonthSequence.forEach(m => {
         let opt = document.createElement('option'); opt.value = m; opt.innerText = m;
@@ -955,6 +1036,10 @@ function buildInterfaceControls() {
         let optM = document.createElement('option'); optM.value = m; optM.innerText = m;
         if(m === mealCounterConfig.month) optM.selected = true;
         if(mealSponsorMonthSelect) mealSponsorMonthSelect.appendChild(optM);
+
+        let optQ = document.createElement('option'); optQ.value = m; optQ.innerText = m;
+        if(m === selectedActiveMonth) optQ.selected = true;
+        if(adminQuickRcptMonthSelect) adminQuickRcptMonthSelect.appendChild(optQ);
     });
 
     const combinedAdminPool = [...systemMonthSequence, ...adminFutureMonths];
@@ -972,7 +1057,9 @@ function buildInterfaceControls() {
         let label = isAdminAuthenticated ? `${d.id} (${d.name})` : `${d.id} - 🔒 Hidden Profile`;
         if(adminLogDonorSelect) adminLogDonorSelect.innerHTML += `<option value="${d.id}">${label}</option>`;
         if(adminStatusSelect) adminStatusSelect.innerHTML += `<option value="${d.id}">${d.id} ${isAdminAuthenticated ? ' - ('+d.name+')' : ''}</option>`;
-        
+        if(adminDonorExportSelect) adminDonorExportSelect.innerHTML += `<option value="${d.id}">${d.id} - ${d.name}</option>`;
+        if(adminQuickRcptDonorSelect) adminQuickRcptDonorSelect.innerHTML += `<option value="${d.id}">${d.id} - ${d.name}</option>`;
+
         let optS = document.createElement('option'); optS.value = d.id; optS.innerText = `${d.id} (${d.name})`;
         if(d.id === mealCounterConfig.donorId) optS.selected = true;
         if(mealSponsorDonorSelect) mealSponsorDonorSelect.appendChild(optS);
@@ -1032,6 +1119,7 @@ function adjustAdminTargetLimit() {
     if(!isNaN(val) && val > 0) { 
         currentSystemBudgetThreshold = val; 
         localStorage.setItem('currentSystemBudgetThreshold', currentSystemBudgetThreshold);
+        updateCurrentMonthGoalProgressBar();
         switchSystemMonth(selectedActiveMonth); 
         alert("Target requirement adjusted successfully."); 
     }
@@ -1049,6 +1137,7 @@ function commitNewDonorProfileRegistration() {
     buildInterfaceControls(); 
     switchSystemMonth(selectedActiveMonth); 
     renderDonorAttendanceLoyaltyMatrix();
+    updateAdminSpecialDashboardFeatures();
     alert("Profile cataloged permanently.");
 }
 
@@ -1079,6 +1168,8 @@ function commitAdminEntry() {
     buildInterfaceControls(); 
     calculateMasterMetrics(); 
     renderDonorAttendanceLoyaltyMatrix();
+    updateCurrentMonthGoalProgressBar();
+    updateAdminSpecialDashboardFeatures();
     switchSystemMonth(m);
     switchAdminLogsMonth(m);
     document.getElementById('admAmount').value = ""; 
@@ -1091,6 +1182,7 @@ function updateTransactionPaymentMode(masterIndex, newMode) {
         dynamicMasterLedger[masterIndex].mode = newMode;
         saveLedgerStateToStorage();
         switchAdminLogsMonth(adminActiveLogsMonth);
+        updateCurrentMonthGoalProgressBar();
         switchSystemMonth(selectedActiveMonth);
     }
 }
@@ -1107,6 +1199,7 @@ function updateTransactionPurpose(masterIndex, newPurpose) {
         }
         saveLedgerStateToStorage();
         switchAdminLogsMonth(adminActiveLogsMonth);
+        updateCurrentMonthGoalProgressBar();
         switchSystemMonth(selectedActiveMonth);
     }
 }
@@ -1128,12 +1221,32 @@ function commitAdminStatusUpdate() {
         saveProfilesStateToStorage();
         alert("Registry updated successfully."); 
         buildInterfaceControls(); 
+        updateAdminSpecialDashboardFeatures();
         switchSystemMonth(selectedActiveMonth); 
     }
 }
 
+// STRICTLY LOCKS THE TOP DASHBOARD "MONTHLY TARGET PROGRESS" CARD TO THE CURRENT RUNNING MONTH
+function updateCurrentMonthGoalProgressBar() {
+    const monthlyDataset = dynamicMasterLedger.filter(r => r.month === CURRENT_RUNNING_MONTH);
+    const monthlySum = monthlyDataset.reduce((sum, item) => sum + item.amount, 0);
+
+    const pct = Math.min(100, Math.round((monthlySum / currentSystemBudgetThreshold) * 100));
+    const fillEl = document.getElementById('goalProgressBarFill');
+    const textEl = document.getElementById('goalPercentText');
+    if(fillEl) fillEl.style.width = pct + "%";
+    if(textEl) textEl.innerText = `${pct}% (₹${monthlySum.toLocaleString('en-IN')} / ₹${currentSystemBudgetThreshold.toLocaleString('en-IN')})`;
+}
+
+// SWITCHES AUDIT DATASETS, TIMELINE METRICS, AND TABLE FILTERING PER SELECTED MONTH
 function switchSystemMonth(m) {
     selectedActiveMonth = m;
+
+    const primarySelect = document.getElementById('controlMonthSelect');
+    if(primarySelect && primarySelect.value !== m) {
+        primarySelect.value = m;
+    }
+
     const monthlyDataset = dynamicMasterLedger.filter(r => r.month === m);
     const monthlySum = monthlyDataset.reduce((sum, item) => sum + item.amount, 0);
     
@@ -1141,25 +1254,21 @@ function switchSystemMonth(m) {
     if(document.getElementById('activeDonorCountDisplay')) document.getElementById('activeDonorCountDisplay').innerText = new Set(monthlyDataset.map(item => item.id)).size;
     if(document.getElementById('inactiveDonorCountDisplay')) document.getElementById('inactiveDonorCountDisplay').innerText = masterDonorsProfiles.filter(p => p.status === "Not Active since 4-6 months").length;
 
-    const pct = Math.min(100, Math.round((monthlySum / currentSystemBudgetThreshold) * 100));
-    const fillEl = document.getElementById('goalProgressBarFill');
-    const textEl = document.getElementById('goalPercentText');
-    if(fillEl) fillEl.style.width = pct + "%";
-    if(textEl) textEl.innerText = `${pct}% (₹${monthlySum.toLocaleString('en-IN')} / ₹${currentSystemBudgetThreshold.toLocaleString('en-IN')})`;
-
     updateMealCounterWidget(monthlySum);
 
     const alertBox = document.getElementById('budgetAlertBox');
     if (alertBox) {
         if (monthlySum >= currentSystemBudgetThreshold) {
             alertBox.className = "budget-alert-banner budget-met";
-            alertBox.innerHTML = `🟢 <strong>Operational Target Achieved:</strong> Collected balance of ₹${monthlySum.toLocaleString('en-IN')} matches our target (₹${currentSystemBudgetThreshold.toLocaleString('en-IN')})!`;
+            alertBox.innerHTML = `🟢 <strong>Operational Target Achieved for ${m}:</strong> Collected balance of ₹${monthlySum.toLocaleString('en-IN')} matches our target (₹${currentSystemBudgetThreshold.toLocaleString('en-IN')})!`;
         } else {
             alertBox.className = "budget-alert-banner budget-short";
-            alertBox.innerHTML = `⚠️ <strong>Critical Operational Deficit Alert:</strong> Madarsa expenses require at least ₹${currentSystemBudgetThreshold.toLocaleString('en-IN')} monthly to support all 50 orphan children.`;
+            alertBox.innerHTML = `⚠️ <strong>Operational Deficit Alert for ${m}:</strong> Madarsa expenses require at least ₹${currentSystemBudgetThreshold.toLocaleString('en-IN')} monthly. Collected: ₹${monthlySum.toLocaleString('en-IN')}.`;
         }
     }
-    renderDataTable(monthlyDataset); renderMasterDonorRegistry();
+    renderDataTable(monthlyDataset); 
+    renderMasterDonorRegistry();
+    calculateMasterMetrics();
     if(!adminActiveLogsMonth) switchAdminLogsMonth(m);
 }
 
@@ -1218,6 +1327,8 @@ function purgeLedgerRow(id, amount, month) {
             calculateMasterMetrics(); 
             renderDonorAttendanceLoyaltyMatrix();
             switchAdminLogsMonth(adminActiveLogsMonth);
+            updateCurrentMonthGoalProgressBar();
+            updateAdminSpecialDashboardFeatures();
             switchSystemMonth(selectedActiveMonth); 
             alert("Record deleted from dynamic database.");
         }
@@ -1332,7 +1443,11 @@ function validateAuthGateAttempt() {
 
         document.getElementById('adminWorkspace').classList.add('active');
         document.getElementById('adminControlBtn').innerText = "🔒 Secure Logout";
-        buildInterfaceControls(); loadPersistentDatabaseState(); switchSystemMonth(selectedActiveMonth); renderAdminMessageInboxTable();
+        buildInterfaceControls(); 
+        loadPersistentDatabaseState(); 
+        switchSystemMonth(selectedActiveMonth); 
+        renderAdminMessageInboxTable();
+        updateAdminSpecialDashboardFeatures();
         resetAdminInactivityTimer();
     } else { alert("Security failure. Invalid access credentials."); }
 }
@@ -1411,6 +1526,8 @@ function importRawJsonMatrix() {
             calculateMasterMetrics();
             renderDonorAttendanceLoyaltyMatrix();
             switchAdminLogsMonth(adminActiveLogsMonth);
+            updateCurrentMonthGoalProgressBar();
+            updateAdminSpecialDashboardFeatures();
             switchSystemMonth(selectedActiveMonth);
             alert("Local application cache adjusted and rendered successfully.");
         }
@@ -1486,19 +1603,218 @@ function downloadSingleReceiptPDF() {
     });
 }
 
+// ==========================================================================
+// 🚀 ENHANCED EXPORT ENGINE: 1-CLICK ALL DONORS & INDIVIDUAL DONOR EXPORTS
+// ==========================================================================
+
+// 1. Excel Export (All Donors vs Specific Selected Donor)
+function triggerCustomExcelExport() {
+    const targetDonorId = document.getElementById('admDonorExportSelect') ? document.getElementById('admDonorExportSelect').value : "ALL";
+    let exportData = dynamicMasterLedger;
+    let fileNameSuffix = "All_Donors_Master";
+
+    if (targetDonorId !== "ALL") {
+        exportData = dynamicMasterLedger.filter(r => r.id === targetDonorId);
+        fileNameSuffix = `Donor_${targetDonorId}`;
+    }
+
+    if (exportData.length === 0) {
+        alert("No transaction records found for the selected export filter.");
+        return;
+    }
+
+    const headers = [
+        ['Auditable Donor ID', 'Donor Name', 'Contact Phone', 'Engagement Status', 'Value (INR)', 'Donation Purpose', 'Payment Mode', 'Period Month', 'Timestamp (IST)']
+    ];
+
+    exportData.forEach(item => {
+        const profile = masterDonorsProfiles.find(d => d.id === item.id);
+        headers.push([
+            item.id,
+            profile ? profile.name : "N/A",
+            profile ? profile.phone : "—",
+            profile ? profile.status : "Active Donor",
+            item.amount,
+            item.purpose || "Sadaqah",
+            item.mode || "UPI",
+            item.month,
+            item.date || "N/A"
+        ]);
+    });
+
+    const book = XLSX.utils.book_new();
+    const sheet = XLSX.utils.aoa_to_sheet(headers);
+    XLSX.utils.book_append_sheet(book, sheet, "GivingWithLove_Ledger");
+    XLSX.writeFile(book, `GivingWithLove_${fileNameSuffix}_${getCurrentISTTimestamp().split(' ')[0]}.xlsx`);
+}
+
+// 2. PDF Export (All Donors vs Specific Selected Donor)
+function triggerCustomPDFExport() {
+    const targetDonorId = document.getElementById('admDonorExportSelect') ? document.getElementById('admDonorExportSelect').value : "ALL";
+    let exportData = dynamicMasterLedger;
+    let titleStr = "Giving with Love — Master Transparency Statement (All Donors)";
+    let fileName = `GivingWithLove_Statement_Master_${getCurrentISTTimestamp().split(' ')[0]}.pdf`;
+
+    if (targetDonorId !== "ALL") {
+        exportData = dynamicMasterLedger.filter(r => r.id === targetDonorId);
+        const p = masterDonorsProfiles.find(d => d.id === targetDonorId);
+        titleStr = `Giving with Love — Donor Statement for ${targetDonorId} (${p ? p.name : 'Donor'})`;
+        fileName = `GivingWithLove_Statement_${targetDonorId}_${getCurrentISTTimestamp().split(' ')[0]}.pdf`;
+    }
+
+    if (exportData.length === 0) {
+        alert("No transaction records found for the selected export filter.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape' });
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text(titleStr, 14, 16);
+    
+    doc.setFontSize(9);
+    doc.setFont("Helvetica", "normal");
+    const totalSum = exportData.reduce((acc, curr) => acc + curr.amount, 0);
+    doc.text(`Total Records: ${exportData.length} | Cumulative Value: Rs. ${totalSum.toLocaleString('en-IN')} | Generated: ${getCurrentISTTimestamp()}`, 14, 22);
+
+    const tableRows = exportData.map(item => {
+        const p = masterDonorsProfiles.find(d => d.id === item.id);
+        return [
+            item.id,
+            p ? p.name : "N/A",
+            item.month,
+            `Rs. ${item.amount.toLocaleString('en-IN')}`,
+            item.purpose || "Sadaqah",
+            item.mode || "UPI",
+            item.date || "N/A"
+        ];
+    });
+
+    doc.autoTable({
+        startY: 26,
+        head: [['Donor ID', 'Donor Name', 'Month', 'Amount', 'Purpose', 'Mode', 'Timestamp (IST)']],
+        body: tableRows,
+        theme: 'grid',
+        headStyles: { fillColor: [4, 47, 46] },
+        styles: { fontSize: 8 }
+    });
+
+    doc.save(fileName);
+}
+
+// 3. Fallback Month-Only Standard Downloads
 function triggerPDFDownload() {
-    const { jsPDF } = window.jspdf; const doc = new jsPDF();
-    doc.setFont("Helvetica", "bold"); doc.text(`Giving with Love Transparency Statement - ${selectedActiveMonth}`, 14, 20);
-    const data = dynamicMasterLedger.filter(r => r.month === selectedActiveMonth).map(i => [i.id, masterDonorsProfiles.find(d => d.id === i.id)?.status || "Active Donor", `Rs. ${i.amount}`, i.purpose || "Sadaqah", i.mode || "UPI", i.date || "N/A"]);
-    doc.autoTable({ startY: 28, head: [['Donor ID', 'Status', 'Value', 'Purpose', 'Mode', 'Date (IST)']], body: data, theme: 'grid', headStyles: { fillColor: [4, 47, 46] } });
+    const { jsPDF } = window.jspdf; 
+    const doc = new jsPDF();
+    doc.setFont("Helvetica", "bold"); 
+    doc.text(`Giving with Love Transparency Statement - ${selectedActiveMonth}`, 14, 20);
+    const data = dynamicMasterLedger.filter(r => r.month === selectedActiveMonth).map(i => [
+        i.id, 
+        masterDonorsProfiles.find(d => d.id === i.id)?.status || "Active Donor", 
+        `Rs. ${i.amount}`, 
+        i.purpose || "Sadaqah", 
+        i.mode || "UPI", 
+        i.date || "N/A"
+    ]);
+    doc.autoTable({ 
+        startY: 28, 
+        head: [['Donor ID', 'Status', 'Value', 'Purpose', 'Mode', 'Date (IST)']], 
+        body: data, 
+        theme: 'grid', 
+        headStyles: { fillColor: [4, 47, 46] } 
+    });
     doc.save(`GivingWithLove_Statement_${selectedActiveMonth}.pdf`);
 }
 
 function triggerExcelDownload() {
     const headers = [['Auditable Donor ID', 'Engagement Status', 'Value', 'Purpose / Reason', 'Payment Mode', 'Timestamp (IST)']];
-    dynamicMasterLedger.filter(r => r.month === selectedActiveMonth).forEach(i => headers.push([i.id, masterDonorsProfiles.find(d => d.id === i.id)?.status || "Active Donor", i.amount, i.purpose || "Sadaqah", i.mode || "UPI", i.date || "N/A"]));
-    const book = XLSX.utils.book_new(); const sheet = XLSX.utils.aoa_to_sheet(headers);
-    XLSX.utils.book_append_sheet(book, sheet, "Audit Ledger Workspace"); XLSX.writeFile(book, `GivingWithLove_Ledger_${selectedActiveMonth}.xlsx`);
+    dynamicMasterLedger.filter(r => r.month === selectedActiveMonth).forEach(i => {
+        headers.push([
+            i.id, 
+            masterDonorsProfiles.find(d => d.id === i.id)?.status || "Active Donor", 
+            i.amount, 
+            i.purpose || "Sadaqah", 
+            i.mode || "UPI", 
+            i.date || "N/A"
+        ]);
+    });
+    const book = XLSX.utils.book_new(); 
+    const sheet = XLSX.utils.aoa_to_sheet(headers);
+    XLSX.utils.book_append_sheet(book, sheet, "Audit Ledger Workspace"); 
+    XLSX.writeFile(book, `GivingWithLove_Ledger_${selectedActiveMonth}.xlsx`);
+}
+
+// ==========================================================================
+// 🌟 SPECIAL ADMIN FEATURES: QUICK RECEIPT LOOKUP & INACTIVE DONOR OUTREACH
+// ==========================================================================
+
+function updateAdminSpecialDashboardFeatures() {
+    const totalLifetime = dynamicMasterLedger.reduce((sum, r) => sum + r.amount, 0);
+    const totalTransactions = dynamicMasterLedger.length;
+    const totalDonors = masterDonorsProfiles.length;
+
+    const statLifetime = document.getElementById('admStatLifetimeCapital');
+    const statTx = document.getElementById('admStatTotalTransactions');
+    const statDonors = document.getElementById('admStatTotalDonors');
+
+    if(statLifetime) statLifetime.innerText = "₹" + totalLifetime.toLocaleString('en-IN');
+    if(statTx) statTx.innerText = totalTransactions;
+    if(statDonors) statDonors.innerText = totalDonors;
+
+    renderInactiveDonorsOutreachList();
+}
+
+function renderInactiveDonorsOutreachList() {
+    const container = document.getElementById('admInactiveDonorsList');
+    if(!container) return;
+    container.innerHTML = "";
+
+    const inactiveList = masterDonorsProfiles.filter(p => p.status === "Not Active since 4-6 months" || p.status === "Rarely donor");
+
+    if (inactiveList.length === 0) {
+        container.innerHTML = "<div style='font-size:11px; color:#10b981;'>All registered donors are actively contributing.</div>";
+        return;
+    }
+
+    inactiveList.forEach(donor => {
+        container.innerHTML += `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.04); padding:6px 10px; border-radius:6px; font-size:11px;">
+                <div>
+                    <strong style="color:#f59e0b;">${donor.id} (${donor.name})</strong>
+                    <div style="color:#94a3b8; font-size:10px;">Phone: ${donor.phone || '—'} | Status: ${donor.status}</div>
+                </div>
+                <button class="btn-pill" style="font-size:10px; padding:3px 8px; background:#25d366; color:#fff;" onclick="dispatchInactiveDonorWhatsApp('${donor.id}', '${donor.phone}', '${donor.name.replace(/'/g, "\\'")}')">
+                    📲 WhatsApp Message
+                </button>
+            </div>
+        `;
+    });
+}
+
+function dispatchInactiveDonorWhatsApp(donorId, phone, name) {
+    if(!phone || phone === "—" || phone.length < 7) {
+        alert(`No valid contact phone number cataloged for ${donorId} (${name}).`);
+        return;
+    }
+    const cleanPhone = phone.replace(/[^0-9]/g, '');
+    const message = encodeURIComponent(`Assalamu Alaikum Respected ${name},\n\nWe hope this finds you in the best of health and Iman. We are sharing our transparent monthly update regarding the 50 orphan children in our Madarsa care under 'Giving with Love'.\n\nYour previous support has been immensely valued. If you would like to renew your monthly Sadaqah or Zakat sponsorship for this month, please visit our live transparency ledger or reach out.\n\nJazakAllah Khair,\nSyed Akber Hussaini (Lead Administrator)\nGiving with Love Initiative`);
+    window.open(`https://api.whatsapp.com/send?phone=${cleanPhone}&text=${message}`, '_blank');
+}
+
+function triggerQuickReceiptLookupFromAdmin() {
+    const donorId = document.getElementById('admQuickRcptDonorSelect').value;
+    const targetMonth = document.getElementById('admQuickRcptMonthSelect').value;
+
+    const matchedRecord = dynamicMasterLedger.find(r => r.id === donorId && r.month === targetMonth);
+
+    if(!matchedRecord) {
+        alert(`No transaction record found for ${donorId} in ${targetMonth}. Please log an entry first.`);
+        return;
+    }
+
+    openReceiptModal(matchedRecord.id, matchedRecord.amount, matchedRecord.month, matchedRecord.mode, matchedRecord.date, 0, matchedRecord.purpose);
 }
 
 function purgeEntireLedgerLogs() { 
@@ -1509,6 +1825,8 @@ function purgeEntireLedgerLogs() {
         calculateMasterMetrics(); 
         renderDonorAttendanceLoyaltyMatrix();
         switchAdminLogsMonth(adminActiveLogsMonth);
+        updateCurrentMonthGoalProgressBar();
+        updateAdminSpecialDashboardFeatures();
         switchSystemMonth(selectedActiveMonth); 
     } 
 }
