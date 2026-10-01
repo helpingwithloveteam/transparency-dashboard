@@ -59,12 +59,13 @@
         </div>
     </div>
 
-    <!-- Info Banner Header Matrix with Live Session Usage Counter -->
+    <!-- Info Banner Header Matrix with Live Session Usage Counter & Next Prayer Pill -->
     <div class="system-top-banner">
         <div class="top-banner-meta-left">
             <div id="islamicCalendarDisplay">Loading Calendar Matrix Array...</div>
             <div id="liveClockDisplay">Initializing Dynamic Clock Engine...</div>
             <div id="sessionTimerDisplay" style="color:var(--emerald-light); font-weight:700;">⏳ Active Session: 00m 00s</div>
+            <div id="topBannerNextPrayerPill" style="background:rgba(16,185,129,0.2); border:1px solid #10b981; color:#34d399; padding:2px 10px; border-radius:12px; font-weight:bold; font-size:11px;">🕌 Next: Loading...</div>
         </div>
         <div class="top-banner-action-right">
             <button class="btn-pill-admin" id="adminControlBtn" onclick="toggleAdminState()">🔑 Admin Access</button>
@@ -89,7 +90,6 @@
     <div id="greetingPage" class="page-view active">
         <div class="welcome-panel">
             
-            <!-- Hero Islamic Emblem -->
             <div style="margin-bottom:15px;">
                 <svg viewBox="0 0 100 100" width="85" height="85" style="filter: drop-shadow(0 0 12px rgba(16,185,129,0.5));">
                     <circle cx="50" cy="50" r="46" fill="#0f172a" stroke="#10b981" stroke-width="4"/>
@@ -104,7 +104,6 @@
             <div class="gradient-hero-title">Giving with Love</div>
             <div class="gradient-hero-sub">Executive Admin Command Desk • Serving Humanity</div>
             
-            <!-- Live Impact Counter Grid -->
             <div class="hero-impact-grid">
                 <div class="hero-metric-card">
                     <div style="font-size: 24px; font-weight:800; color:#10b981;">50</div>
@@ -122,13 +121,11 @@
 
             <p class="welcome-desc">A transparent open-ledger portal sustaining the food, shelter, and futures of 50 precious orphan children in our Madarsa care.</p>
             
-            <!-- Action Buttons Array -->
             <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:20px;">
                 <button class="btn-action-large" onclick="transitionToDashboard()">📊 Explore Open Audit Ledger →</button>
                 <button class="btn-action-large" style="background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3);" onclick="toggleOpeningContactForm()">💬 Contact Us / Quick Chat</button>
             </div>
 
-            <!-- 📩 EMBEDDED INTERNAL MESSAGING FORM -->
             <div id="openingContactFormCard" style="display:none; background: rgba(0,0,0,0.25); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 20px; margin-top: 25px; text-align: left;">
                 <h4 style="margin-top:0; color:#10b981; font-size:15px; display:flex; justify-content:space-between; align-items:center;">
                     <span>📩 Quick Message to Lead Admin</span>
@@ -153,7 +150,8 @@
             <!-- TOP NAVIGATION TABS -->
             <div class="navigation-tabs-container">
                 <button class="nav-tab-btn active" onclick="navigateSubPage('home', this)">Home Dashboard</button>
-                <button class="nav-tab-btn" onclick="navigateSubPage('islamic-cal', this)">🌙 Islamic Calendar & Holidays (2027)</button>
+                <button class="nav-tab-btn" onclick="navigateSubPage('namaz-ramzan', this)">🕌 Namaz & Ramadan 30-Day Desk</button>
+                <button class="nav-tab-btn" onclick="navigateSubPage('islamic-cal', this)">🌙 Islamic Calendar & Holidays</button>
                 <button class="nav-tab-btn" onclick="navigateSubPage('about', this)">About Us</button>
                 <button class="nav-tab-btn" onclick="navigateSubPage('transparency', this)">Transparency Statement</button>
                 <button class="nav-tab-btn" onclick="navigateSubPage('updates', this)">Community Updates</button>
@@ -285,12 +283,13 @@
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-controls', this)">👁️ Controls & Meal Settings</button>
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-entries', this)">➕ Ledger & Profiles</button>
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-features', this)">⭐ Admin Power Tools</button>
+                                <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-islamic-tools', this)">🌙 Namaz & Ramzan Admin</button>
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-hadith', this)">📖 Hadith Config</button>
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-inbox', this)">📥 Inbox & Du'a Desk</button>
                                 <button class="admin-tab-btn" onclick="switchAdminSubTab('adm-exports', this)">⚙️ Data & Exports</button>
                             </div>
 
-                            <!-- MODULE 1: LETTERHEAD STUDIO WITH AI DRAFT ASSISTANT & ARCHIVE -->
+                            <!-- MODULE 1: LETTERHEAD STUDIO -->
                             <div id="adm-tab-letterhead" class="admin-module-panel active">
                                 <div class="admin-sub-tag id-emerald">📜 Official Letterhead Studio & AI Assistant</div>
                                 <div class="admin-card-inner">
@@ -327,7 +326,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 2: PUBLIC CONTROLS & MEAL COUNTER SETTINGS -->
+                            <!-- MODULE 2: CONTROLS & MEALS -->
                             <div id="adm-tab-controls" class="admin-module-panel">
                                 <div class="admin-sub-tag id-emerald">🍲 Monthly Orphan Meals Counter Settings</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px; background:rgba(16, 185, 129, 0.08); border:1px solid var(--emerald-primary);">
@@ -373,7 +372,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 3: LEDGER & PROFILES MANAGEMENT WITH AUTO-ID GENERATOR -->
+                            <!-- MODULE 3: LEDGER ENTRIES & PROFILES -->
                             <div id="adm-tab-entries" class="admin-module-panel">
                                 <div class="admin-sub-tag">➕ Append New Donation Log</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px;">
@@ -434,7 +433,7 @@
                                     <button class="btn-core bg-emerald mt-10" onclick="commitNewDonorProfileRegistration()">✨ Save Profile</button>
                                 </div>
 
-                                <div class="admin-sub-tag">✏️️ Edit Existing Donor Profile</div>
+                                <div class="admin-sub-tag">✏️ Edit Existing Donor Profile</div>
                                 <div class="admin-card-inner">
                                     <div class="admin-grid-inputs">
                                         <div class="input-wrap"><label>Target Profile ID</label><select id="admStatusDonorSelect" onchange="syncPhoneInputField(this.value)"></select></div>
@@ -446,7 +445,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 4: SPECIAL ADMIN POWER FEATURES -->
+                            <!-- MODULE 4: ADMIN POWER TOOLS -->
                             <div id="adm-tab-features" class="admin-module-panel">
                                 <div class="admin-sub-tag id-emerald">📊 Executive Portfolio Metrics Overview</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px; display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:10px;">
@@ -480,7 +479,54 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 5: HADITH CONFIGURATOR -->
+                            <!-- MODULE 5: 🌙 NAMAZ, RAMZAN & HOLIDAYS MANUAL CONFIGURATOR -->
+                            <div id="adm-tab-islamic-tools" class="admin-module-panel">
+                                <!-- 🕌 PRAYER TIMING EDITOR -->
+                                <div class="admin-sub-tag id-emerald">🕌 Daily 5 Namaz & Jumu'ah Timings Editor (Hyderabad IST)</div>
+                                <div class="admin-card-inner" style="margin-bottom:15px;">
+                                    <div class="admin-grid-inputs">
+                                        <div class="input-wrap"><label>Fajr (Sehar End)</label><input type="text" id="admNamazFajr" placeholder="e.g. 05:15 AM"></div>
+                                        <div class="input-wrap"><label>Sunrise (Ishraq)</label><input type="text" id="admNamazSunrise" placeholder="e.g. 06:30 AM"></div>
+                                        <div class="input-wrap"><label>Dhuhr (Zohar)</label><input type="text" id="admNamazDhuhr" placeholder="e.g. 12:30 PM"></div>
+                                        <div class="input-wrap"><label>Asr</label><input type="text" id="admNamazAsr" placeholder="e.g. 04:45 PM"></div>
+                                        <div class="input-wrap"><label>Maghrib (Iftar)</label><input type="text" id="admNamazMaghrib" placeholder="e.g. 06:35 PM"></div>
+                                        <div class="input-wrap"><label>Isha & Taraweeh</label><input type="text" id="admNamazIsha" placeholder="e.g. 08:00 PM"></div>
+                                        <div class="input-wrap"><label>Jumu'ah Khutbah</label><input type="text" id="admNamazJumuah" placeholder="e.g. 01:15 PM"></div>
+                                    </div>
+                                    <div style="display:flex; gap:10px; margin-top:10px;">
+                                        <button class="btn-core bg-emerald" onclick="saveAdminNamazTimings()">💾 Save Prayer Timings</button>
+                                        <button class="btn-core bg-navy" onclick="playDashboardWelcomeTone()">🔔 Test Chime / Bell Tone</button>
+                                    </div>
+                                </div>
+
+                                <!-- 📅 MANUAL ISLAMIC HOLIDAY CREATOR -->
+                                <div class="admin-sub-tag id-rose">📅 Manual Islamic Holiday / Observance Adder</div>
+                                <div class="admin-card-inner" style="margin-bottom:15px;">
+                                    <div class="admin-grid-inputs">
+                                        <div class="input-wrap"><label>Holiday / Day Name</label><input type="text" id="admHolidayNameInput" placeholder="e.g. Shab-e-Qadr Special Ibadat"></div>
+                                        <div class="input-wrap"><label>Hijri Date</label><input type="text" id="admHolidayHijriInput" placeholder="e.g. 27 Ramadan 1448 AH"></div>
+                                        <div class="input-wrap"><label>Gregorian Date</label><input type="text" id="admHolidayGregInput" placeholder="e.g. Mar 06, 2027"></div>
+                                    </div>
+                                    <button class="btn-core bg-emerald mt-10" onclick="commitNewCustomIslamicHoliday()">➕ Add Holiday to Public Board</button>
+                                </div>
+
+                                <!-- 🍲 RAMADAN ROZA TIMING EDITOR (ANY OF THE 30 DAYS) -->
+                                <div class="admin-sub-tag id-emerald">🍲 Edit Specific Roza (Day 1–30) Sehar / Iftar Time</div>
+                                <div class="admin-card-inner">
+                                    <div class="admin-grid-inputs">
+                                        <div class="input-wrap">
+                                            <label>Select Roza Day</label>
+                                            <select id="admRamadanDaySelect" onchange="syncAdminRamadanEditInputs(this.value)"></select>
+                                        </div>
+                                        <div class="input-wrap"><label>Gregorian Date</label><input type="text" id="admRamadanEditDate"></div>
+                                        <div class="input-wrap"><label>Sehar Ends (Fajr)</label><input type="text" id="admRamadanEditSehar"></div>
+                                        <div class="input-wrap"><label>Iftar Time (Maghrib)</label><input type="text" id="admRamadanEditIftar"></div>
+                                    </div>
+                                    <button class="btn-core bg-emerald mt-10" onclick="saveAdminRamadanSingleDay()">💾 Update Roza Timetable Line</button>
+                                </div>
+                            </div>
+
+                            <!-- MODULE 6: HADITH CONFIG -->
                             <div id="adm-tab-hadith" class="admin-module-panel">
                                 <div class="admin-sub-tag">📖 Calibrate Active Dashboard Hadith</div>
                                 <div class="admin-card-inner">
@@ -496,7 +542,7 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 6: INBOX & DUA DESK -->
+                            <!-- MODULE 7: INBOX -->
                             <div id="adm-tab-inbox" class="admin-module-panel">
                                 <div class="admin-sub-tag id-emerald">📥 Message & Du'a Request Inbox</div>
                                 <div class="table-responsive max-h-250" style="margin-bottom:15px;">
@@ -512,10 +558,8 @@
                                 </div>
                             </div>
 
-                            <!-- MODULE 7: DATA EXPORTS, DIAGNOSTICS & ENHANCED EXPORT ENGINE -->
+                            <!-- MODULE 8: DATA EXPORTS -->
                             <div id="adm-tab-exports" class="admin-module-panel">
-                                
-                                <!-- 📊 ADVANCED 1-CLICK ALL / INDIVIDUAL DONOR EXPORT ENGINE -->
                                 <div class="admin-sub-tag id-emerald">📊 Master Data Download Hub (Excel & PDF)</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px; background:rgba(16, 185, 129, 0.08); border:1px solid var(--emerald-primary);">
                                     <p style="font-size:11px; color:#cbd5e1; margin-bottom:8px;">
@@ -531,7 +575,6 @@
                                     </div>
                                 </div>
 
-                                <!-- 📲 ADMIN-ONLY 1-CLICK CROSS-DEVICE DATA SYNC TOOLBAR -->
                                 <div class="sync-transfer-bar" style="margin-bottom:15px;">
                                     <div>
                                         <div class="sync-bar-title">⚡ Realtime Mobile ↔ Desktop Data Transfer Hub</div>
@@ -545,14 +588,12 @@
                                     </div>
                                 </div>
 
-                                <!-- 🩺 DATA INTEGRITY SELF-CHECK DIAGNOSTIC -->
                                 <div class="admin-sub-tag id-emerald">🩺 Data Integrity Self-Check Diagnostic</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px;">
                                     <button class="btn-core bg-navy" onclick="runDataIntegrityDiagnostic()">🔍 Run Diagnostic Scan</button>
                                     <div id="diagnosticResultsBox" style="margin-top:10px; font-size:12px; max-height:100px; overflow-y:auto;"></div>
                                 </div>
 
-                                <!-- 🔑 ADMIN PASSWORD/TOKEN QUICK-CHANGER -->
                                 <div class="admin-sub-tag id-rose">🔑 Quick Admin Password Changer</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px;">
                                     <div style="display:flex; gap:10px; align-items:center;">
@@ -561,13 +602,11 @@
                                     </div>
                                 </div>
 
-                                <!-- 📜 DEVICE AUDIT & SESSION HISTORY -->
                                 <div class="admin-sub-tag">📜 Device Audit & Session History</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px; font-size:11px; color:#94a3b8;" id="deviceAuditLogBox">
                                     Last Active Admin Session: <strong style="color:#fff;" id="auditSessionTime">N/A</strong> | Device: <strong style="color:#10b981;" id="auditSessionDevice">Browser Verified</strong>
                                 </div>
 
-                                <!-- 📦 ONE-CLICK LOCAL FILE AUTO-BACKUP -->
                                 <div class="admin-sub-tag">📦 One-Click Local File Auto-Backup</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px;">
                                     <button class="btn-core bg-forest" onclick="downloadDataJsonFileBackup()">📦 Download JSON Data Backup File</button>
@@ -582,9 +621,7 @@
                                 <div class="admin-sub-tag">🔄 JSON Cloud Data Sync</div>
                                 <div class="admin-card-inner" style="margin-bottom:15px;">
                                     <button class="btn-core bg-navy" style="margin-bottom:8px;" onclick="generateRawJsonExport()">📋 Copy Raw JSON Data Text</button>
-                                    <div class="input-wrap" style="margin-bottom:8px;">
-                                        <textarea id="admRawJsonArea" style="min-height:80px;"></textarea>
-                                    </div>
+                                    <div class="input-wrap" style="margin-bottom:8px;"><textarea id="admRawJsonArea" style="min-height:80px;"></textarea></div>
                                     <button class="btn-core bg-emerald" onclick="importRawJsonMatrix()">📥 Import JSON Data Text</button>
                                 </div>
 
@@ -656,17 +693,86 @@
 
                     </div>
 
-                    <!-- TAB 2: ISLAMIC CALENDAR & INDIAN HOLIDAYS (2027) -->
+                    <!-- TAB 2: 🕌 NAMAZ & RAMADAN 30-DAY DESK (NEW INTEGRATED TAB) -->
+                    <div id="sub-page-namaz-ramzan" class="app-sub-section">
+                        
+                        <!-- 🕌 DAILY 5-TIMES NAMAZ TIMINGS CARD -->
+                        <div class="card-view" style="background: linear-gradient(135deg, #091322 0%, #0d2847 100%); border: 1px solid var(--emerald-primary);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
+                                <div>
+                                    <h2 style="color:var(--amber-gold); margin:0; font-size:1.3rem;">🕌 Daily 5 Namaz & Jumu'ah Timetable</h2>
+                                    <div style="font-size:0.85rem; color:var(--text-dim);">Hyderabad, Telangana (IST) • Accurate Azan & Iqamah Reference</div>
+                                </div>
+                                <span id="prayerCurrentStatusBadge" style="background:#10b981; color:#000; font-weight:bold; font-size:11px; padding:4px 12px; border-radius:20px;">Active Day</span>
+                            </div>
+
+                            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-top:10px;" id="namazPrayerGrid">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+
+                        <!-- 🌙 RAMADAN 30-DAY TIMETABLE (SEHAR & IFTAR) CARD -->
+                        <div class="card-view" style="margin-top:20px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
+                                <div>
+                                    <h2 style="color:var(--emerald-light); margin:0; font-size:1.3rem;">🌙 Ramadan Mubarak 30-Day Calendar (Sehar & Iftar)</h2>
+                                    <div style="font-size:0.85rem; color:var(--text-dim);">Complete 30-Day Sehri Ending & Iftari Schedule for Hyderabad, India</div>
+                                </div>
+                                <div style="display:flex; gap:8px;">
+                                    <button class="btn-core bg-forest" style="font-size:11px;" onclick="downloadRamadanPDFTimetable()">📄 Download Calendar PDF</button>
+                                </div>
+                            </div>
+
+                            <!-- Fasting Du'as Banner -->
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-bottom:15px;" class="ramadan-duas-grid">
+                                <div style="background:rgba(16,185,129,0.08); border:1px solid #10b981; padding:10px 14px; border-radius:8px;">
+                                    <strong style="color:#fbbf24; font-size:11px; display:block;">🥣 Sehri Niyyah (Intention for Fasting)</strong>
+                                    <div style="font-size:13px; font-weight:bold; color:#fff; margin:3px 0;">وَبِصَوْمِ غَدٍ نَوَيْتُ مِنْ شَهْرِ رَمَضَانَ</div>
+                                    <div style="font-size:10px; color:#94a3b8; font-style:italic;">"I intend to keep the fast for tomorrow in the month of Ramadan."</div>
+                                </div>
+                                <div style="background:rgba(245,158,11,0.08); border:1px solid #f59e0b; padding:10px 14px; border-radius:8px;">
+                                    <strong style="color:#38bdf8; font-size:11px; display:block;">🍇 Iftar Du'a (At the Time of Breaking Fast)</strong>
+                                    <div style="font-size:13px; font-weight:bold; color:#fff; margin:3px 0;">اللَّهُمَّ إِنِّي لَكَ صُمْتُ وَبِكَ آمَنْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ</div>
+                                    <div style="font-size:10px; color:#94a3b8; font-style:italic;">"O Allah! I fasted for You and in You I believe, and with Your provision I break my fast."</div>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive max-h-250" style="border: 1px solid var(--card-border); border-radius: 8px;">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Roza #</th>
+                                            <th>Date (IST)</th>
+                                            <th>Day</th>
+                                            <th style="color:#38bdf8;">🥣 Sehar Ends</th>
+                                            <th style="color:#fbbf24;">🍇 Iftar Time</th>
+                                            <th>Daily Phase</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ramadanTimetableBody">
+                                        <!-- Rendered dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- TAB 3: ISLAMIC CALENDAR & INDIAN HOLIDAYS (2027) -->
                     <div id="sub-page-islamic-cal" class="app-sub-section">
                         <div class="islamic-holiday-card">
-                            <h2 style="color:var(--amber-gold); margin-bottom:4px; font-size:1.3rem;">🌙 Indian Islamic Calendar & Holy Observances (1448–1449 AH / 2027)</h2>
-                            <p style="font-size:0.85rem; color:var(--text-dim);">Live Islamic calendar dates calculated for Indian Standard Time (IST) in accordance with Indian regional moon sighting parameters:</p>
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                                <div>
+                                    <h2 style="color:var(--amber-gold); margin-bottom:4px; font-size:1.3rem;">🌙 Indian Islamic Calendar & Holy Observances (1448–1449 AH / 2027)</h2>
+                                    <p style="font-size:0.85rem; color:var(--text-dim);">Live Islamic calendar dates calculated for Indian Standard Time (IST) in accordance with Indian regional moon sighting parameters:</p>
+                                </div>
+                            </div>
                             
                             <div class="holiday-grid" id="islamicHolidaysGrid"></div>
                         </div>
                     </div>
 
-                    <!-- TAB 3: ABOUT US -->
+                    <!-- TAB 4: ABOUT US -->
                     <div id="sub-page-about" class="app-sub-section">
                         <div class="card-view">
                             <h2 class="section-main-title">About Our Organization</h2>
@@ -678,7 +784,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 4: TRANSPARENCY -->
+                    <!-- TAB 5: TRANSPARENCY -->
                     <div id="sub-page-transparency" class="app-sub-section">
                         <div class="card-view border-left-gold">
                             <h2 class="section-main-title">Governance & Transparency Policy</h2>
@@ -689,7 +795,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 5: COMMUNITY UPDATES -->
+                    <!-- TAB 6: COMMUNITY UPDATES -->
                     <div id="sub-page-updates" class="app-sub-section">
                         <div class="card-view">
                             <h2 class="section-main-title">Community Updates & Operational Log</h2>
@@ -700,7 +806,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 6: FAQ STATION -->
+                    <!-- TAB 7: FAQ STATION -->
                     <div id="sub-page-faq" class="app-sub-section">
                         <div class="card-view">
                             <h2 class="section-main-title">Frequently Asked Questions (FAQ)</h2>
@@ -708,7 +814,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 7: THANK YOU & DU'A -->
+                    <!-- TAB 8: THANK YOU & DU'A -->
                     <div id="sub-page-thankyou" class="app-sub-section">
                         <div class="card-view" style="text-align:center; padding: 30px 20px; background: var(--navy-surface); border: 1px solid var(--card-border); border-radius: 12px;">
                             <div style="font-size: 28px; font-weight: bold; color: var(--emerald-light); margin-bottom: 8px;">جَزَاكُمُ ٱللَّٰهُ خَيْرًا</div>
