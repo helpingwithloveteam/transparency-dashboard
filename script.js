@@ -13,7 +13,6 @@ function getDynamicCurrentMonthTag() {
     return `${monthAbbr}-${yearTwoDigits}`;
 }
 
-// Fixed Running Month Reference
 const CURRENT_RUNNING_MONTH = getDynamicCurrentMonthTag();
 
 let currentSystemBudgetThreshold = 13000;
@@ -110,21 +109,80 @@ let dynamicHadithPool = [
 let activeHadithIndex = 0;
 let hadithAutoRotateTimer = null;
 
-// 🌙 INDIAN ISLAMIC HOLIDAYS FOR UPCOMING YEAR 2027 (1448–1449 AH)
-const indianIslamicHolidays = [
-    { name: "Isra & Mi'raj", hijri: "27 Rajab 1448 AH", greg: "Jan 06, 2027" },
-    { name: "Shab-e-Barat (Lailat al-Bara'at)", hijri: "15 Sha'ban 1448 AH", greg: "Jan 23, 2027" },
-    { name: "Ramadan Fasting Begins", hijri: "1 Ramadan 1448 AH", greg: "Feb 08, 2027" },
-    { name: "Laylat al-Qadr (Night of Power)", hijri: "27 Ramadan 1448 AH", greg: "Mar 06, 2027" },
-    { name: "Eid-ul-Fitr (Ramadan Eid)", hijri: "1 Shawwal 1448 AH", greg: "Mar 10, 2027" },
-    { name: "Day of Arafah (Hajj)", hijri: "9 Dhul-Hijjah 1448 AH", greg: "May 16, 2027" },
-    { name: "Eid-ul-Adha (Bakrid)", hijri: "10 Dhul-Hijjah 1448 AH", greg: "May 17, 2027" },
-    { name: "Islamic New Year (1449 AH)", hijri: "1 Muharram 1449 AH", greg: "Jun 06, 2027" },
-    { name: "Day of Ashura", hijri: "10 Muharram 1449 AH", greg: "Jun 15, 2027" },
-    { name: "Milad-un-Nabi (Prophet's Birthday)", hijri: "12 Rabi' al-Awwal 1449 AH", greg: "Aug 15, 2027" }
+// ==========================================================================
+// 🌙 ISLAMIC HOLIDAYS ARRAY (DEFAULT 2027 + MANUAL CUSTOM ADDITIONS ENGINE)
+// ==========================================================================
+let defaultIndianIslamicHolidays = [
+    { id: "HOL-01", name: "Isra & Mi'raj", hijri: "27 Rajab 1448 AH", greg: "Jan 06, 2027", custom: false },
+    { id: "HOL-02", name: "Shab-e-Barat (Lailat al-Bara'at)", hijri: "15 Sha'ban 1448 AH", greg: "Jan 23, 2027", custom: false },
+    { id: "HOL-03", name: "Ramadan Fasting Begins", hijri: "1 Ramadan 1448 AH", greg: "Feb 08, 2027", custom: false },
+    { id: "HOL-04", name: "Laylat al-Qadr (Night of Power)", hijri: "27 Ramadan 1448 AH", greg: "Mar 06, 2027", custom: false },
+    { id: "HOL-05", name: "Eid-ul-Fitr (Ramadan Eid)", hijri: "1 Shawwal 1448 AH", greg: "Mar 10, 2027", custom: false },
+    { id: "HOL-06", name: "Day of Arafah (Hajj)", hijri: "9 Dhul-Hijjah 1448 AH", greg: "May 16, 2027", custom: false },
+    { id: "HOL-07", name: "Eid-ul-Adha (Bakrid)", hijri: "10 Dhul-Hijjah 1448 AH", greg: "May 17, 2027", custom: false },
+    { id: "HOL-08", name: "Islamic New Year (1449 AH)", hijri: "1 Muharram 1449 AH", greg: "Jun 06, 2027", custom: false },
+    { id: "HOL-09", name: "Day of Ashura", hijri: "10 Muharram 1449 AH", greg: "Jun 15, 2027", custom: false },
+    { id: "HOL-10", name: "Milad-un-Nabi (Prophet's Birthday)", hijri: "12 Rabi' al-Awwal 1449 AH", greg: "Aug 15, 2027", custom: false }
 ];
 
-// 🎵 WEB AUDIO SYNTHESIZER FOR EXECUTIVE WELCOME TONE
+let customIslamicHolidays = [];
+
+// ==========================================================================
+// 🕌 DAILY NAMAZ (PRAYER) TIMINGS STATE (HYDERABAD IST STANDARDS)
+// ==========================================================================
+let systemNamazTimingsState = {
+    fajr: "05:15 AM",
+    sunrise: "06:28 AM",
+    dhuhr: "12:28 PM",
+    asr: "04:42 PM",
+    maghrib: "06:25 PM",
+    isha: "07:45 PM",
+    jumuah: "01:15 PM"
+};
+
+// ==========================================================================
+// 🌙 RAMADAN 30-DAY TIMETABLE ENGINE (1448 AH / 2027)
+// ==========================================================================
+let defaultRamadanCalendar = [];
+(function generateDefaultRamadan30Days() {
+    const baseStartDate = new Date(2027, 1, 8); // Feb 8, 2027
+    const seharStartMin = 5 * 60 + 20; // 05:20 AM
+    const iftarStartMin = 18 * 60 + 22; // 06:22 PM
+
+    for(let i = 1; i <= 30; i++) {
+        const curDate = new Date(baseStartDate);
+        curDate.setDate(baseStartDate.getDate() + (i - 1));
+
+        // Gradual seasonal minute shift
+        const curSeharTotalMin = seharStartMin - Math.floor((i - 1) * 0.7);
+        const curIftarTotalMin = iftarStartMin + Math.floor((i - 1) * 0.5);
+
+        const sH = String(Math.floor(curSeharTotalMin / 60)).padStart(2, '0');
+        const sM = String(curSeharTotalMin % 60).padStart(2, '0');
+        const iH = String(Math.floor(curIftarTotalMin / 60) - 12).padStart(2, '0');
+        const iM = String(curIftarTotalMin % 60).padStart(2, '0');
+
+        const dateStr = curDate.toLocaleDateString('en-IN', { month: 'short', day: '2-digit', year: 'numeric' });
+        const dayName = curDate.toLocaleDateString('en-IN', { weekday: 'short' });
+
+        let ashraPhase = "1st Ashra (Rehmat)";
+        if(i > 20) ashraPhase = "3rd Ashra (Nijat)";
+        else if(i > 10) ashraPhase = "2nd Ashra (Maghfirat)";
+
+        defaultRamadanCalendar.push({
+            roza: i,
+            date: dateStr,
+            day: dayName,
+            sehar: `${sH}:${sM} AM`,
+            iftar: `0${iH}:${iM} PM`,
+            phase: ashraPhase
+        });
+    }
+})();
+
+let dynamicRamadanCalendar = [...defaultRamadanCalendar];
+
+// 🎵 WEB AUDIO SYNTHESIZER
 function playDashboardWelcomeTone() {
     try {
         const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -172,10 +230,12 @@ window.addEventListener('DOMContentLoaded', async () => {
     initLiveBannerClock();
     initSessionUsageTimer();
     initIslamicCalendar();
+    loadPersistentDatabaseState();
     renderIslamicHolidaysGrid();
+    renderNamazPrayerGrid();
+    renderRamadanTimetable();
     initDailyHadith();
     startHadithAutoRotation();
-    loadPersistentDatabaseState();
     check24HourSessionPersistence();
     await loadInitialJsonDataEngine();
 
@@ -202,7 +262,7 @@ function transitionToDashboard() {
     switchSystemMonth(selectedActiveMonth);
 }
 
-// 💬 FLOATING AI-STYLE CHAT SUPPORT WIDGET FUNCTIONS
+// 💬 FLOATING CHAT WIDGET
 function toggleFloatingChatWidget() {
     const chatWidget = document.getElementById('floatingChatWidget');
     if (chatWidget) {
@@ -297,18 +357,218 @@ async function saveLedgerStateToStorage() {
     }
 }
 
-// 🌙 ISLAMIC HOLIDAYS DRAWER RENDER ENGINE (FOR 2027)
+// ==========================================================================
+// 🌙 ISLAMIC HOLIDAYS DRAWER (DEFAULT + MANUAL CUSTOM ENTRIES)
+// ==========================================================================
 function renderIslamicHolidaysGrid() {
     const grid = document.getElementById('islamicHolidaysGrid');
     if(!grid) return;
     grid.innerHTML = "";
-    indianIslamicHolidays.forEach(h => {
+
+    const combinedHolidays = [...defaultIndianIslamicHolidays, ...customIslamicHolidays];
+
+    combinedHolidays.forEach(h => {
+        const deleteBtn = (isAdminAuthenticated && h.custom) 
+            ? `<button class="btn-mini-delete" style="font-size:9px; margin-top:5px;" onclick="deleteCustomIslamicHoliday('${h.id}')">✖ Delete</button>` 
+            : '';
+        const customBadge = h.custom ? `<span style="background:#0284c7; color:#fff; font-size:9px; padding:1px 5px; border-radius:4px; margin-left:4px;">Custom</span>` : '';
+
         grid.innerHTML += `<div class="holiday-item">
-            <span class="holiday-name">${h.name}</span>
+            <span class="holiday-name">${h.name} ${customBadge}</span>
             <span class="holiday-hijri">🌙 ${h.hijri}</span>
             <span class="holiday-greg">📅 ${h.greg} (India)</span>
+            ${deleteBtn}
         </div>`;
     });
+}
+
+function commitNewCustomIslamicHoliday() {
+    const nameInput = document.getElementById('admHolidayNameInput');
+    const hijriInput = document.getElementById('admHolidayHijriInput');
+    const gregInput = document.getElementById('admHolidayGregInput');
+
+    const name = nameInput ? nameInput.value.trim() : "";
+    const hijri = hijriInput ? hijriInput.value.trim() : "";
+    const greg = gregInput ? gregInput.value.trim() : "";
+
+    if(!name || !hijri || !greg) {
+        alert("Please complete all Holiday fields (Name, Hijri date, and Gregorian date).");
+        return;
+    }
+
+    const newHoliday = {
+        id: "CUST-HOL-" + Date.now(),
+        name,
+        hijri,
+        greg,
+        custom: true
+    };
+
+    customIslamicHolidays.push(newHoliday);
+    localStorage.setItem('customIslamicHolidays', JSON.stringify(customIslamicHolidays));
+    
+    nameInput.value = "";
+    hijriInput.value = "";
+    gregInput.value = "";
+
+    renderIslamicHolidaysGrid();
+    alert("🎉 Islamic Holiday successfully added to the public board!");
+}
+
+function deleteCustomIslamicHoliday(id) {
+    if(confirm("Delete this custom holiday entry?")) {
+        customIslamicHolidays = customIslamicHolidays.filter(h => h.id !== id);
+        localStorage.setItem('customIslamicHolidays', JSON.stringify(customIslamicHolidays));
+        renderIslamicHolidaysGrid();
+    }
+}
+
+// ==========================================================================
+// 🕌 DAILY 5-TIMES NAMAZ TIMETABLE RENDER & ADMIN ACTIONS
+// ==========================================================================
+function renderNamazPrayerGrid() {
+    const grid = document.getElementById('namazPrayerGrid');
+    if(!grid) return;
+
+    const prayers = [
+        { key: 'fajr', name: 'Fajr', time: systemNamazTimingsState.fajr, icon: '🌅', note: 'Sehar Ends' },
+        { key: 'sunrise', name: 'Sunrise', time: systemNamazTimingsState.sunrise, icon: '☀️', note: 'Ishraq End' },
+        { key: 'dhuhr', name: 'Dhuhr', time: systemNamazTimingsState.dhuhr, icon: '🕛', note: 'Zohar' },
+        { key: 'asr', name: 'Asr', time: systemNamazTimingsState.asr, icon: '🌤️', note: 'Late Noon' },
+        { key: 'maghrib', name: 'Maghrib', time: systemNamazTimingsState.maghrib, icon: '🌇', note: 'Iftar Time' },
+        { key: 'isha', name: 'Isha', time: systemNamazTimingsState.isha, icon: '🌙', note: 'Taraweeh' },
+        { key: 'jumuah', name: 'Jumu\'ah', time: systemNamazTimingsState.jumuah, icon: '🕌', note: 'Friday Khutbah' }
+    ];
+
+    grid.innerHTML = "";
+    prayers.forEach(p => {
+        grid.innerHTML += `
+            <div style="background:rgba(0,0,0,0.35); border:1px solid var(--card-border); padding:12px; border-radius:8px; text-align:center;">
+                <div style="font-size:18px;">${p.icon}</div>
+                <div style="font-size:13px; font-weight:bold; color:var(--emerald-light); margin-top:2px;">${p.name}</div>
+                <div style="font-size:15px; font-weight:800; color:#fff; margin:4px 0;">${p.time}</div>
+                <div style="font-size:10px; color:#94a3b8;">${p.note}</div>
+            </div>
+        `;
+    });
+
+    const nextPill = document.getElementById('topBannerNextPrayerPill');
+    if(nextPill) {
+        nextPill.innerText = `🕌 Asr: ${systemNamazTimingsState.asr} | Maghrib: ${systemNamazTimingsState.maghrib}`;
+    }
+}
+
+function saveAdminNamazTimings() {
+    const f = document.getElementById('admNamazFajr').value.trim();
+    const sr = document.getElementById('admNamazSunrise').value.trim();
+    const dh = document.getElementById('admNamazDhuhr').value.trim();
+    const as = document.getElementById('admNamazAsr').value.trim();
+    const mg = document.getElementById('admNamazMaghrib').value.trim();
+    const is = document.getElementById('admNamazIsha').value.trim();
+    const jm = document.getElementById('admNamazJumuah').value.trim();
+
+    if(f) systemNamazTimingsState.fajr = f;
+    if(sr) systemNamazTimingsState.sunrise = sr;
+    if(dh) systemNamazTimingsState.dhuhr = dh;
+    if(as) systemNamazTimingsState.asr = as;
+    if(mg) systemNamazTimingsState.maghrib = mg;
+    if(is) systemNamazTimingsState.isha = is;
+    if(jm) systemNamazTimingsState.jumuah = jm;
+
+    localStorage.setItem('systemNamazTimingsState', JSON.stringify(systemNamazTimingsState));
+    renderNamazPrayerGrid();
+    alert("🕌 Namaz & Prayer Timings updated successfully!");
+}
+
+// ==========================================================================
+// 🌙 RAMADAN 30-DAY TIMETABLE ENGINE & PDF EXPORT
+// ==========================================================================
+function renderRamadanTimetable() {
+    const tbody = document.getElementById('ramadanTimetableBody');
+    if(!tbody) return;
+    tbody.innerHTML = "";
+
+    dynamicRamadanCalendar.forEach(item => {
+        tbody.innerHTML += `
+            <tr>
+                <td><b>Roza ${item.roza}</b></td>
+                <td>${item.date}</td>
+                <td>${item.day}</td>
+                <td style="color:#38bdf8; font-weight:bold;">${item.sehar}</td>
+                <td style="color:#fbbf24; font-weight:bold;">${item.iftar}</td>
+                <td><span class="badge-status status-active" style="font-size:10px;">${item.phase}</span></td>
+            </tr>
+        `;
+    });
+
+    const daySelect = document.getElementById('admRamadanDaySelect');
+    if(daySelect && daySelect.children.length === 0) {
+        dynamicRamadanCalendar.forEach(r => {
+            daySelect.innerHTML += `<option value="${r.roza}">Roza ${r.roza} (${r.date})</option>`;
+        });
+        syncAdminRamadanEditInputs(1);
+    }
+}
+
+function syncAdminRamadanEditInputs(rozaNum) {
+    const item = dynamicRamadanCalendar.find(r => r.roza == rozaNum);
+    if(item) {
+        if(document.getElementById('admRamadanEditDate')) document.getElementById('admRamadanEditDate').value = item.date;
+        if(document.getElementById('admRamadanEditSehar')) document.getElementById('admRamadanEditSehar').value = item.sehar;
+        if(document.getElementById('admRamadanEditIftar')) document.getElementById('admRamadanEditIftar').value = item.iftar;
+    }
+}
+
+function saveAdminRamadanSingleDay() {
+    const rozaNum = document.getElementById('admRamadanDaySelect').value;
+    const item = dynamicRamadanCalendar.find(r => r.roza == rozaNum);
+
+    if(item) {
+        const d = document.getElementById('admRamadanEditDate').value.trim();
+        const s = document.getElementById('admRamadanEditSehar').value.trim();
+        const i = document.getElementById('admRamadanEditIftar').value.trim();
+
+        if(d) item.date = d;
+        if(s) item.sehar = s;
+        if(i) item.iftar = i;
+
+        localStorage.setItem('dynamicRamadanCalendar', JSON.stringify(dynamicRamadanCalendar));
+        renderRamadanTimetable();
+        alert(`🌙 Ramadan Timings for Roza ${rozaNum} saved successfully!`);
+    }
+}
+
+function downloadRamadanPDFTimetable() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+    doc.setFont("Helvetica", "bold");
+    doc.setFontSize(14);
+    doc.text("Giving with Love — Official Ramadan 30-Day Timetable", 14, 15);
+
+    doc.setFontSize(9);
+    doc.setFont("Helvetica", "normal");
+    doc.text("Hyderabad, Telangana (IST) • 1448 AH / 2027 • Sehar Ending & Iftari Timings", 14, 21);
+
+    const rows = dynamicRamadanCalendar.map(r => [
+        `Roza ${r.roza}`,
+        r.date,
+        r.day,
+        r.sehar,
+        r.iftar,
+        r.phase
+    ]);
+
+    doc.autoTable({
+        startY: 25,
+        head: [['Roza', 'Date', 'Day', 'Sehar Ends', 'Iftar Time', 'Phase']],
+        body: rows,
+        theme: 'grid',
+        headStyles: { fillColor: [6, 78, 59] },
+        styles: { fontSize: 8 }
+    });
+
+    doc.save(`GivingWithLove_Ramadan_Timetable_30Days.pdf`);
 }
 
 // 📲 1-CLICK CROSS-DEVICE DATA SYNC & TRANSFER FUNCTIONS
@@ -643,7 +903,7 @@ function updateAdminPasswordToken() {
 function generateJazakallahNoteCard() {
     const cardText = `جَزَاكُمُ ٱللَّٰهُ خَيْرًا\n\nOfficial Acknowledgment — Giving with Love\nThank you for your generous contribution supporting 50 orphan children.\n\nReceipt Ref: ${document.getElementById('rcptNo').innerText}\nAmount: ${document.getElementById('rcptAmount').innerText}\n\nMay Allah bless and multiply your wealth with continuous Barakah!`;
     navigator.clipboard.writeText(cardText);
-    alert("🖼️️ JazakAllah Thank-You Note copied to clipboard!");
+    alert("🖼️ JazakAllah Thank-You Note copied to clipboard!");
 }
 
 function toggleReceiptTaxDisclaimer() {
@@ -933,6 +1193,15 @@ function loadPersistentDatabaseState() {
         savedLetterheadArchive = JSON.parse(localStorage.getItem('savedLetterheadArchive'));
         renderLetterheadArchiveList();
     }
+    if (localStorage.getItem('customIslamicHolidays')) {
+        customIslamicHolidays = JSON.parse(localStorage.getItem('customIslamicHolidays'));
+    }
+    if (localStorage.getItem('systemNamazTimingsState')) {
+        systemNamazTimingsState = JSON.parse(localStorage.getItem('systemNamazTimingsState'));
+    }
+    if (localStorage.getItem('dynamicRamadanCalendar')) {
+        dynamicRamadanCalendar = JSON.parse(localStorage.getItem('dynamicRamadanCalendar'));
+    }
 }
 
 function saveProfilesStateToStorage() {
@@ -1064,6 +1333,16 @@ function buildInterfaceControls() {
         if(d.id === mealCounterConfig.donorId) optS.selected = true;
         if(mealSponsorDonorSelect) mealSponsorDonorSelect.appendChild(optS);
     });
+
+    // Populate Prayer inputs for admin
+    if(document.getElementById('admNamazFajr')) document.getElementById('admNamazFajr').value = systemNamazTimingsState.fajr;
+    if(document.getElementById('admNamazSunrise')) document.getElementById('admNamazSunrise').value = systemNamazTimingsState.sunrise;
+    if(document.getElementById('admNamazDhuhr')) document.getElementById('admNamazDhuhr').value = systemNamazTimingsState.dhuhr;
+    if(document.getElementById('admNamazAsr')) document.getElementById('admNamazAsr').value = systemNamazTimingsState.asr;
+    if(document.getElementById('admNamazMaghrib')) document.getElementById('admNamazMaghrib').value = systemNamazTimingsState.maghrib;
+    if(document.getElementById('admNamazIsha')) document.getElementById('admNamazIsha').value = systemNamazTimingsState.isha;
+    if(document.getElementById('admNamazJumuah')) document.getElementById('admNamazJumuah').value = systemNamazTimingsState.jumuah;
+
     updateExportTextAreaBox();
 }
 
@@ -1226,7 +1505,6 @@ function commitAdminStatusUpdate() {
     }
 }
 
-// STRICTLY LOCKS THE TOP DASHBOARD "MONTHLY TARGET PROGRESS" CARD TO THE CURRENT RUNNING MONTH
 function updateCurrentMonthGoalProgressBar() {
     const monthlyDataset = dynamicMasterLedger.filter(r => r.month === CURRENT_RUNNING_MONTH);
     const monthlySum = monthlyDataset.reduce((sum, item) => sum + item.amount, 0);
@@ -1238,7 +1516,6 @@ function updateCurrentMonthGoalProgressBar() {
     if(textEl) textEl.innerText = `${pct}% (₹${monthlySum.toLocaleString('en-IN')} / ₹${currentSystemBudgetThreshold.toLocaleString('en-IN')})`;
 }
 
-// SWITCHES AUDIT DATASETS, TIMELINE METRICS, AND TABLE FILTERING PER SELECTED MONTH
 function switchSystemMonth(m) {
     selectedActiveMonth = m;
 
@@ -1413,6 +1690,7 @@ function toggleAdminState() {
         buildInterfaceControls();
         switchSystemMonth(selectedActiveMonth);
         renderAdminMessageInboxTable();
+        renderIslamicHolidaysGrid();
         alert("🔒 Signed out successfully. Admin session locked.");
     } else { 
         document.getElementById('authGatewayModal').classList.add('visible'); 
@@ -1448,6 +1726,7 @@ function validateAuthGateAttempt() {
         switchSystemMonth(selectedActiveMonth); 
         renderAdminMessageInboxTable();
         updateAdminSpecialDashboardFeatures();
+        renderIslamicHolidaysGrid();
         resetAdminInactivityTimer();
     } else { alert("Security failure. Invalid access credentials."); }
 }
@@ -1470,6 +1749,7 @@ function resetAdminInactivityTimer() {
                 document.getElementById('adminControlBtn').innerText = "🔑 Admin Access";
                 buildInterfaceControls();
                 switchSystemMonth(selectedActiveMonth);
+                renderIslamicHolidaysGrid();
                 alert("⏰ Admin session auto-locked due to 12 minutes of inactivity.");
             }
         }
@@ -1604,10 +1884,8 @@ function downloadSingleReceiptPDF() {
 }
 
 // ==========================================================================
-// 🚀 ENHANCED EXPORT ENGINE: 1-CLICK ALL DONORS & INDIVIDUAL DONOR EXPORTS
+// 🚀 EXPORT ENGINE (ALL DONORS & SPECIFIC DONOR EXPORTS)
 // ==========================================================================
-
-// 1. Excel Export (All Donors vs Specific Selected Donor)
 function triggerCustomExcelExport() {
     const targetDonorId = document.getElementById('admDonorExportSelect') ? document.getElementById('admDonorExportSelect').value : "ALL";
     let exportData = dynamicMasterLedger;
@@ -1648,7 +1926,6 @@ function triggerCustomExcelExport() {
     XLSX.writeFile(book, `GivingWithLove_${fileNameSuffix}_${getCurrentISTTimestamp().split(' ')[0]}.xlsx`);
 }
 
-// 2. PDF Export (All Donors vs Specific Selected Donor)
 function triggerCustomPDFExport() {
     const targetDonorId = document.getElementById('admDonorExportSelect') ? document.getElementById('admDonorExportSelect').value : "ALL";
     let exportData = dynamicMasterLedger;
@@ -1704,7 +1981,6 @@ function triggerCustomPDFExport() {
     doc.save(fileName);
 }
 
-// 3. Fallback Month-Only Standard Downloads
 function triggerPDFDownload() {
     const { jsPDF } = window.jspdf; 
     const doc = new jsPDF();
@@ -1747,9 +2023,8 @@ function triggerExcelDownload() {
 }
 
 // ==========================================================================
-// 🌟 SPECIAL ADMIN FEATURES: QUICK RECEIPT LOOKUP & INACTIVE DONOR OUTREACH
+// 🌟 SPECIAL ADMIN FEATURES: STATS, QUICK RECEIPT & INACTIVE DONORS
 // ==========================================================================
-
 function updateAdminSpecialDashboardFeatures() {
     const totalLifetime = dynamicMasterLedger.reduce((sum, r) => sum + r.amount, 0);
     const totalTransactions = dynamicMasterLedger.length;
